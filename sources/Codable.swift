@@ -100,13 +100,31 @@ extension Array where Element: FixedWidthInteger {
     }
 }
 
+extension Encoder {
+    public var context: BigInt.CodingContext? {
+        return userInfo[BigInt.CodingContext.key] as? BigInt.CodingContext
+    }
+}
+
+extension Decoder {
+    public var context: BigInt.CodingContext? {
+        return userInfo[BigInt.CodingContext.key] as? BigInt.CodingContext
+    }
+}
+
 extension BigInt: Codable {
+    
+    public enum CodingContext {
+        public static let key = CodingUserInfoKey(rawValue: "\(CodingContext.self)")!
+        
+        case decimal
+    }
     
     public init(from decoder: Decoder) throws {
         
-        if case .decimalString = decoder.userInfo[CodingUserInfoKey(rawValue: BigInt.CodingStrategy.name)] as? CodingStrategy  {
+        if let context = decoder.context, case .decimal = context  {
             
-            var container = try decoder.singleValueContainer()
+            let container = try decoder.singleValueContainer()
             if let raw = try? container.decode(String.self), let value = BigInt(raw) {
                 self = value
             } else {
@@ -142,7 +160,7 @@ extension BigInt: Codable {
 
     public func encode(to encoder: Encoder) throws {
         
-        if case .decimalString = decoder.userInfo[CodingUserInfoKey(rawValue: BigInt.CodingStrategy.name)] as? CodingStrategy  {
+        if let context = encoder.context, case .decimal = context  {
             
             var container = encoder.singleValueContainer()
             try container.encode(self.description)

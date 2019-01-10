@@ -33,12 +33,6 @@ public struct BigInt: SignedInteger {
         case plus
         case minus
     }
-    
-    public enum CodingStrategy: String {
-        public static let name: String = "\(CodingStrategy.self)"
-        case decimalString
-    }
-    
     public typealias Magnitude = BigUInt
 
     /// The type representing a digit in `BigInt`'s underlying number system.

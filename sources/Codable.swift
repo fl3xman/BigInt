@@ -107,14 +107,11 @@ extension BigInt: Codable {
         if case .decimalString = decoder.userInfo[CodingUserInfoKey(rawValue: BigInt.CodingStrategy.name)] as? CodingStrategy  {
             
             var container = try decoder.singleValueContainer()
-            if let raw = try container.decode(String.self), let value = BigInt(raw) {
+            if let raw = try? container.decode(String.self), let value = BigInt(raw) {
                 self = value
-            } else if let raw = try container.decode(Int64.self) {
-                self = BigInt(raw)
             } else {
-                throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath,
-                                                        debugDescription: "Invalid big integer"))
-            }
+                self = BigInt(try container.decode(Int64.self))
+            } 
             
         } else {
             

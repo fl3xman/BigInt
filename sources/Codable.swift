@@ -101,13 +101,13 @@ extension Array where Element: FixedWidthInteger {
 }
 
 extension Encoder {
-    public var context: BigInt.CodingContext? {
+    var context: BigInt.CodingContext? {
         return userInfo[BigInt.CodingContext.key] as? BigInt.CodingContext
     }
 }
 
 extension Decoder {
-    public var context: BigInt.CodingContext? {
+    var context: BigInt.CodingContext? {
         return userInfo[BigInt.CodingContext.key] as? BigInt.CodingContext
     }
 }

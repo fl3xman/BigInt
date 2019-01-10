@@ -102,14 +102,9 @@ extension Array where Element: FixedWidthInteger {
 
 extension BigInt: Codable {
     
-    public enum CodingStrategy: String {
-        public static let name: String = "\(CodingStrategy.self)"
-        case decimalString
-    }
-    
     public init(from decoder: Decoder) throws {
         
-        if case .decimalString = decoder.userInfo[CodingUserInfoKey(CodingStrategy.name)] as? CodingStrategy  {
+        if case .decimalString = decoder.userInfo[CodingUserInfoKey(rawValue: BigInt.CodingStrategy.name)] as? CodingStrategy  {
             
             var container = try decoder.singleValueContainer()
             if let raw = try container.decode(String.self), let value = BigInt(raw) {
@@ -150,7 +145,7 @@ extension BigInt: Codable {
 
     public func encode(to encoder: Encoder) throws {
         
-        if case .decimalString = decoder.userInfo[CodingUserInfoKey(CodingStrategy.name)] as? CodingStrategy  {
+        if case .decimalString = decoder.userInfo[CodingUserInfoKey(rawValue: BigInt.CodingStrategy.name)] as? CodingStrategy  {
             
             var container = encoder.singleValueContainer()
             try container.encode(self.description)
